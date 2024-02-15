@@ -172,7 +172,7 @@ export default function SignupCard() {
             <form
               onSubmit={handleSubmit(onSubmit, (errors) => console.log(errors))}
             >
-              <HStack mt={3} alignItems={"center"} justifyContent={'center'}>
+              <HStack mt={3} spacing={4} alignItems={"center"} justifyContent={'center'}>
                 <Box>
                   <FormControl isInvalid={errors.firstName} id="firstName">
                     <FormLabel>First Name</FormLabel>
