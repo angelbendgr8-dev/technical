@@ -13,7 +13,7 @@ export const theme = extendTheme(
     withDefaultProps({
       defaultProps: {
         variant: 'outline',
-        size: 'md',
+        size: 'lg',
         focusBorderColor: 'primary.900',
       },
       components: ['Input', 'NumberInput', 'PinInput','Button'],

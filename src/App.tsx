@@ -238,12 +238,13 @@ export default function SignupCard() {
                   p="3"
                   my={2}
                   justifyContent={"start"}
+                  boxShadow={'xs'}
                   rounded="md"
                   flexWrap={"wrap"}
                 >
                   {pErrors.map((item, index) => (
                     <Text
-                      rounded={"lg"}
+                      rounded={"2xl"}
                       mr={2}
                       my={2}
                       px={3}
@@ -289,7 +290,7 @@ export default function SignupCard() {
                   }}
                   type="submit"
                 >
-                  Create an account
+                  Create account
                 </Button>
               </Stack>
             </form>
