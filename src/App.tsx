@@ -45,6 +45,9 @@ const registerSchema = Yup.object().shape({
     .matches(/^(?=.*[0-9])/, "One Number")
     .matches(/^(?=.*[!@#$%^&*])/, "At least 1 Symbol")
     .matches(/^(?=.{8,})/, "Must Contain 8 Characters"),
+  confirm: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords must match")
+    .required("Password Confirmation is required"),
 });
 
 export default function SignupCard() {
@@ -62,7 +65,7 @@ export default function SignupCard() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors,values },
   } = useForm({
     resolver: yupResolver(registerSchema),
     defaultValues: {
@@ -70,7 +73,7 @@ export default function SignupCard() {
       lastName: "",
       email: "",
       password: "",
-      confirmPassword: "",
+      confirm: "",
     },
   });
 
@@ -80,6 +83,7 @@ export default function SignupCard() {
 
   const formatPasswordError = async (password: string) => {
     // console.log(password);
+    console.log(values)
     registerSchema
       .validate(
         {
@@ -92,7 +96,7 @@ export default function SignupCard() {
         setErrors([]);
       })
       .catch((e) => {
-        console.log(e.errors);
+        // console.log(e.errors);
         setErrors(e.errors);
       });
   };
@@ -118,7 +122,7 @@ export default function SignupCard() {
         py={2}
         justifyContent={"center"}
       >
-        <Text fontWeight={'900'}>Logo</Text>
+        <Text fontWeight={"700"}>Logo</Text>
       </HStack>
       <Stack spacing={4} mx={"auto"} flex={2} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
@@ -126,11 +130,11 @@ export default function SignupCard() {
             Create account
           </Heading>
           <Text fontSize={"md"} color={"gray.600"}>
-            Get up and running and start bookking appointments
+            Get up and running and start booking appointments
           </Text>
         </Stack>
         <Box
-          rounded={"lg"}
+          rounded={"2xl"}
           bg={useColorModeValue("white", "gray.700")}
           boxShadow={"lg"}
           p={8}
@@ -151,7 +155,7 @@ export default function SignupCard() {
                 w="full"
                 bg="white"
               >
-                Sign up with google
+                Sign up with Google
               </Button>
               <Stack
                 direction="row"
@@ -168,7 +172,7 @@ export default function SignupCard() {
             <form
               onSubmit={handleSubmit(onSubmit, (errors) => console.log(errors))}
             >
-              <HStack mt={2} alignItems={"center"}>
+              <HStack mt={3} alignItems={"center"} justifyContent={'center'}>
                 <Box>
                   <FormControl isInvalid={errors.firstName} id="firstName">
                     <FormLabel>First Name</FormLabel>
@@ -179,7 +183,7 @@ export default function SignupCard() {
                       type="text"
                     />
                     <FormErrorMessage>
-                      {errors.firstName && errors.firstName.message}
+                      {errors.firstName ? errors.firstName.message: ' '}
                     </FormErrorMessage>
                   </FormControl>
                 </Box>
@@ -193,12 +197,12 @@ export default function SignupCard() {
                       type="text"
                     />
                     <FormErrorMessage>
-                      {errors.lastName && errors.lastName.message}
+                      {errors.lastName ? errors.lastName.message: ' '}
                     </FormErrorMessage>
                   </FormControl>
                 </Box>
               </HStack>
-              <FormControl isInvalid={errors?.email!} mt={2} id="email">
+              <FormControl isInvalid={errors?.email!} mt={3} id="email">
                 <FormLabel>Email address</FormLabel>
                 <Input
                   {...register("email")}
@@ -209,7 +213,7 @@ export default function SignupCard() {
                   {errors.email && errors.email.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl mt={2} id="password">
+              <FormControl isInvalid={errors?.password!} mt={3} id="password">
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
                   <Input
@@ -230,6 +234,7 @@ export default function SignupCard() {
                     </Button>
                   </InputRightElement>
                 </InputGroup>
+              
               </FormControl>
 
               {Ierrors.length >= 1 ? (
@@ -238,17 +243,18 @@ export default function SignupCard() {
                   p="3"
                   my={2}
                   justifyContent={"start"}
-                  boxShadow={'xs'}
+                  boxShadow={"xs"}
                   rounded="md"
                   flexWrap={"wrap"}
                 >
                   {pErrors.map((item, index) => (
                     <Text
+                      key={index}
                       rounded={"2xl"}
                       mr={2}
                       my={2}
                       px={3}
-                      bg={Ierrors.includes(item) ? "faint" : "primary.900"}
+                      bg={Ierrors.includes(item) ? "#e2e8ef" : "primary.900"}
                       color={Ierrors.includes(item) ? "black" : "white"}
                     >
                       {item}
@@ -258,12 +264,13 @@ export default function SignupCard() {
               ) : (
                 <Box></Box>
               )}
-              <FormControl mt={2} id="password">
+              <FormControl isInvalid={errors?.confirm!} mt={3} id="password">
                 <FormLabel>Confirm Password</FormLabel>
                 <InputGroup>
                   <Input
                     boxShadow={"sm"}
                     focusBorderColor="primary.900"
+                    {...register("confirm")}
                     type={showPassword ? "text" : "password"}
                   />
                   <InputRightElement px={6} h={"full"}>
@@ -278,6 +285,9 @@ export default function SignupCard() {
                     </Button>
                   </InputRightElement>
                 </InputGroup>
+                <FormErrorMessage>
+                  {errors.confirm && errors.confirm.message}
+                </FormErrorMessage>
               </FormControl>
               <Stack my={6} spacing={10} pt={2}>
                 <Button
